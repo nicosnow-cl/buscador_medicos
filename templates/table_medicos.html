@@ -1,0 +1,64 @@
+<table class="table table-sm table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cargo</th>
+            <th scope="col">Función</th>
+            <th scope="col">Grado</th>
+            <th scope="col">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if medicos.medico != 'SIN RESULTADOS' %}
+            {% for medico in medicos.values %}
+                <tr id="{{ forloop.counter }}">
+                    <th>{{ forloop.counter }}</th>
+                    <td>{{ medico.NOMBRE }}</td>
+                    <td>{{ medico.CARGO }}</td>
+                    <td>{{ medico.CALIFICACION }}</td>
+                    <td>{{ medico.GRADO }}</td>
+                    <td class="text-center"><button id="button_{{ forloop.counter }}" type="button" class="btn btn-sm btn-outline-primary button_med" onclick="getInfoMedico({{ forloop.counter }}, '{{ medico.NOMBRE }}')">+</button></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% if medicos.medico == 'SIN RESULTADOS' %}
+            <tr>
+                <td class="text-center font-weight-bold font-italic text-danger" colspan="6">{{ medicos.medico }}</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+<script>
+    function getInfoMedico(id, nombre){
+        $.ajax({
+            method: 'GET',
+            url: {% url 'tarea_3:get_datos_medico' %},
+            datatype: 'json',
+            data: {nombre:nombre},
+            beforeSend: function(){
+                $('.button_med').prop('disabled', true);
+                $('#button_'+id).html('');
+                $('#button_'+id).addClass('loader_button');
+                $('.btn_close').prop('disabled', true);
+            },
+            success: function(data){
+                $('.button_med').prop('disabled', false);
+                $('.btn_close').prop('disabled', false);
+                $('#button_'+id).html('+');
+                $('#button_'+id).removeClass('loader_button');
+                $('#modal_content_medico').html(data);
+                $('#modal_rut').modal('toggle');
+                hide();
+            },
+            error: function(status){
+                console.log(status);
+                $('.button_med').prop('disabled', false);
+                $('.btn_close').prop('disabled', false);
+                $('#button_'+id).html('+');
+                $('#button_'+id).removeClass('loader_button');
+            }
+        });
+    }
+</script>

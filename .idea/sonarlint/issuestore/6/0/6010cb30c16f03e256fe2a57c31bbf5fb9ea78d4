@@ -1,0 +1,7 @@
+
+wpython:S1542"SRename function "getMedicos" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(›ØÉ‹ÿÿÿÿÿ8‘Ø°¢À.
+fpython:S2208"GImport only needed names or import the module and then use its members.(ÂşÄß8Ù†è•À.
+upython:S1542"QRename function "mainView" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(­·åçÿÿÿÿÿ8£À.
+wpython:S1542
+"SRename function "getComunas" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(­Ú¼óøÿÿÿÿ8£À.
+zpython:S1542"VRename function "getHospitales" to match the regular expression ^[a-z_][a-z0-9_]{2,}$.(ÌèâÊùÿÿÿÿ8Ô¤à À.

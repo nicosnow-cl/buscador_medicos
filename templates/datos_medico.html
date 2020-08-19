@@ -1,0 +1,41 @@
+{% if medico.antecedentes != 'NO ENCONTRADO' %}
+    {% for antecedente in medico.antecedentes %}
+        <div class="row">
+            <div class="col">
+                <div class="card text-white bg-dark">
+                    <div class="card-header">Antecedente {{ forloop.counter }}</div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ antecedente.nombres }} {{ antecedente.apellidoPaterno }} {{ antecedente.apellidoMaterno }}</h4>
+                        <ul class="list-group text-dark">
+                            <li class="list-group-item text-white active"><b>RUT</b> {{ antecedente.rut }}</li>
+                            <li class="list-group-item"><b>Sexo</b> {{ antecedente.sexo }}</li>
+                            <li class="list-group-item"><b>Fecha Nac.</b> {{ antecedente.fechaNacimiento }}</li>
+                            <li class="list-group-item"><b>RUT Est.</b> {{ antecedente.rutEstablecimiento }}</li>
+                            <li class="list-group-item"><b>Nom Est.</b> {{ antecedente.nomEstablecimiento }}</li>
+                            <li class="list-group-item"><b>Nom Fant.</b> {{ antecedente.nombreFantasia }}</li>
+                            <li class="list-group-item"><b>Fecha Ante.</b> {{ antecedente.fechaAntecedente }}</li>
+                            <li class="list-group-item"><b>Cod. Ante.</b> {{ antecedente.codAntecedente }}</li>
+                            <li class="list-group-item"><b>Tipo Ante.</b> {{ antecedente.tipoAntecedente }}</li>
+                            <li class="list-group-item"><b>Clase Ante.</b> {{ antecedente.claseAntecedente }}</li>
+                            <li class="list-group-item"><b>Procedencia</b> {{ antecedente.procedencia }}</li>
+                            <li class="list-group-item"><b>Nro. Registro</b> {{ antecedente.nroRegistro }}</li>
+                            <li class="list-group-item"><b>Estado</b> {{ antecedente.estado }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    {% endfor %}
+{% endif %}
+{% if medico.antecedentes == 'NO ENCONTRADO' %}
+    <div class="row">
+        <div class="col">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title">Lo sentimos! No se han podido encontrar los registros para este médico :(</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
