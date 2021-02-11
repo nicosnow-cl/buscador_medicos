@@ -1,0 +1,76 @@
+{% load medNameFilters %}
+{% load currencyFilters %}
+
+<input type="text" placeholder="Buscar..." id="searchField">
+<div id="table-sortable"><div>
+<script>
+    var data_medicos = JSON.parse("{{ medicos|escapejs }}");
+
+    data_medicos.forEach(med => {
+        buttons_element = '<div id="loader_' + med['ID'] + '" style="display: none"></div>' +
+                          '    <div id="button_' + med['ID'] + '">' + 
+                          '    <a role="button" class="btn btn-sm btn-outline-danger button_search google_search" href="https://www.google.com/search?q=doctor+' + med['GOOGLE_SEARCH'] + '" target="_blank"><i class="fab fa-google"></i></a>' + 
+                          '    <button type="button" class="btn btn-sm btn-outline-primary button_search super_de_salud" onclick="getInfoMedico(' + med['ID'] + ',`' + med['NOMBRE'] + '`)"><i class="fas fa-info-circle"></i></button>' +
+                          '    <br>' +
+                          '    <a role="button" class="btn btn-sm btn_block btn-outline-success button_search doctoralia" href="https://www.doctoralia.cl/buscar?q=' + med['DOCTORALIA_SEARCH'] + '&loc=" target="_blank">Doctoralia</a>' +
+                          '</div>'
+        med['ACCIÓN'] = buttons_element;
+    });
+
+    var columns = {
+        ID:'#',
+        NOMBRE: 'Nombre',
+        TIPO: 'Tipo',
+        CARGO: 'Cargo',
+        REMUNERACION: 'Remuneración',
+        ACCIÓN: 'Acción'
+    }
+
+    var table = $('#table-sortable').tableSortable({
+        data: data_medicos,
+        columns: columns,
+        rowsPerPage: 10,
+        pagination: true,
+        sorting: ['ID', 'NOMBRE', 'TIPO', 'CARGO', 'REMUNERACION'],
+        searchField: '#searchField'
+    });
+
+    function getInfoMedico(id, nombre){
+        $.ajax({
+            method: 'GET',
+            url: {% url 'get_datos_medico' %},
+            datatype: 'json',
+            data: { nombre:nombre },
+            beforeSend: function(){
+                $('#button_' + id).hide();
+                $('#loader_' + id).show();
+                $('#loader_' + id).addClass('loader_button');
+                $('.button_search').prop('disabled', true);
+                $('.btn_close').prop('disabled', true);
+                $('.gs-button').css('pointer-events', 'none');
+                $('#searchField').prop('disabled', true);
+            },
+            success: function( data ){
+                $('#loader_' + id).removeClass('loader_button');
+                $('#loader_' + id).hide();
+                $('#button_' + id).show();
+                $('.button_search').prop('disabled', false);
+                $('.btn_close').prop('disabled', false);
+                $('#modal_content_medico').html(data);
+                $('#modal_rut').modal('toggle');
+                $('.gs-button').css('pointer-events', 'auto');
+                $('#searchField').prop('disabled', false);
+            },
+            error: function( status ){
+                console.log( status );
+                $('#loader_' + id).removeClass('loader_button');
+                $('#loader_' + id).hide();
+                $('#button_' + id).show();
+                $('.button_search').prop('disabled', false);
+                $('.btn_close').prop('disabled', false);
+                $('.gs-button').css('pointer-events', 'auto');
+                $('#searchField').prop('disabled', false);
+            }
+        });
+    };
+</script>    

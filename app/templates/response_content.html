@@ -1,0 +1,59 @@
+{% load static %}
+
+{% if hospitales %}
+    {% for hospital in hospitales %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img class="card-img-top" src="{% static 'images/hospital_default.jpg' %}" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">{{ hospital.hospital_name }}</h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-block btn-primary" onclick="cargarMedicos({{ hospital.hospital_id }}, '{{ hospital.hospital_name }}')">Ver medicos</button>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b>Dirección</b> No informa</li>
+                        <li class="list-group-item"><b>Teléfono</b> No informa</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <script>
+        function show () {
+            document.getElementById("spinner-front").classList.add("show");
+            document.getElementById("spinner-back").classList.add("show");
+        }
+
+        function hide () {
+            document.getElementById("spinner-front").classList.remove("show");
+            document.getElementById("spinner-back").classList.remove("show");
+        }
+
+        function cargarMedicos(id, name){
+            $('#modal_info_title').html('Médicos de ' + name);
+
+            $.ajax({
+                method: 'GET',
+                url: {% url 'get_medicos' %},
+                datatype: 'json',
+                data: {hospital_id:id},
+                beforeSend: function(){
+                    show();
+                },
+                success: function(data, status){
+                    $('#modal_content').html(data);
+                    $('#modal_info').modal('toggle');
+                    hide();
+                },
+                error: function(status){
+                    console.log(status);
+                    hide();
+                }
+            });
+        };
+    </script>
+{% endif %}
+{% if not hospitales %}
+    <p class="lead text-warning"><b class="text-danger">*</b>Lo sentimos, no existen registros de <b>hospitales publicos</b> para esta comuna.</p>
+{% endif %}

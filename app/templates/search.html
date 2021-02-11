@@ -1,0 +1,26 @@
+{% load static %}
+
+<main role="main">
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1><img class="logo-search img-fluid" src="{% static 'images/datamed_logo_normal.png' %}" alt=""> Data<span class="text-info">MED</span></h1>
+            <p class="lead text-muted">Utilice esta plataforma para obtener información de los médicos que trabajan en los hospitales publicos de Chile.</p>
+            <p class="lead text-primary"><b>¡Puedes buscar por regiones, comunas y hospitales!</b></p>
+            <!--
+            <p>
+                <button type="button" class="btn btn-secondary my-2" disabled>Buscador avanzado</button>
+                <button type="button" class="btn btn-primary my-2">Escribir comuna</button> 
+            </p>
+            -->
+            <hr>
+            {% block search %}
+                <div class="row">
+                    <div class="col d-flex justify-content-center">
+                        {% include 'search_advanced.html' %}
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+    </section>
+
+</main>

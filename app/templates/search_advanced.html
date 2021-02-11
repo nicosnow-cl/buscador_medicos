@@ -1,0 +1,96 @@
+{% load static %}
+
+<form id="form_search">
+    <p class="lead text-primary font-italic text-sm-left" style="font-size: 15px"><b class="text-danger">*</b> Elija la región y comuna para buscar los hospitales de esa zona.</p>
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            <label class="sr-only" for="inlineFormInputGroup">Region</label>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Región</div>
+                </div>
+                <select class="form-control" id="region" name="region">
+                    <option value="0" selected>- Seleccionar -</option>
+                    {% for region in regiones %}
+                        <option value="{{ region.region_id }}">{{ region.region_name }} ({{ region.region_number }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-auto">
+            <label class="sr-only" for="inlineFormInputGroup">Comuna</label>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Comuna</div>
+                </div>
+                <select class="form-control" id="comuna" name="comuna">
+                    <option value="-1" selected>- Seleccionar -</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-row d-flex justify-content-center">
+        <div class="col-6">
+            <button id="search_button" type="submit" class="btn btn-block btn-success" disabled>Buscar</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $('#region').on('change', function(){
+        let val = $(this).val();
+
+        if (val >= 0){
+            $.ajax({
+                method: 'GET',
+                url: {% url 'get_comunas' %},
+                datatype: 'json',
+                data: {region_id:val},
+                success: function(data, status){
+                    console.log(status);
+                    let options = '<option value="-1" selected>- Seleccionar -</option>';
+                    Object.keys(data['comunas']).forEach(key => {
+                        options += '<option value="' + data['comunas'][key].comuna_id + '">' + data['comunas'][key].comuna_name + '</option>';
+                    });
+                    $('#comuna').html(options);
+                },
+                error: function(status){
+                    console.log(status);
+                }
+            });
+        }
+        else{
+            $('#comuna').find('option:not(:first)').remove();
+            $('#search_button').prop('disabled', true);
+        }
+    });
+
+    $('#comuna').on('change', function(){
+       let val = $(this).val();
+
+       if (val >= 0){
+           $('#search_button').prop('disabled', false);
+       }
+       else{
+           $('#search_button').prop('disabled', true);
+       }
+    });
+
+    $('#form_search').submit(function(e){
+        e.preventDefault();
+        val = $('#comuna').val();
+
+        $.ajax({
+            method: 'GET',
+            url: {% url 'get_hospitales' %},
+            datatype: 'json',
+            data: {comuna_id:val},
+            success: function(data, status){
+                $('#hospitales').html(data)
+            },
+            error: function(status){
+                console.log(status);
+            }
+        });
+    })
+</script>
